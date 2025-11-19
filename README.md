@@ -14,7 +14,7 @@ Das Projekt legt großen Wert auf professionelle Entwicklung, Code-Qualität und
 
 1.  **Simulation:** Implementierung der Partikel-Datenstrukturen und der Hauptlogik, inklusive Interaktionsmatrix und Physikparametern.
 2.  **Visualisierung:** Erstellung einer stabilen, echtzeitfähigen Darstellung, die $\mathbf{\ge 2000}$ Partikel darstellen kann.
-3.  **Code-Qualität und Tests:** Erstellung von **Unit Tests** (Ziel: über $70\%$ Coverage) und umfassende Dokumentation (Docstrings).
+3.  **Code-Qualität und Tests:** Erstellung von **Unit Tests**  und umfassende Dokumentation (Docstrings).
 4.  **Optimierung:** Einsatz von Profiling-Tools und Optimierungstechniken (z.B. NumPy/Numba) zur Behebung von Engpässen.
 5.  **CI:** Einrichtung automatisierter Tests (Linter und Pytest) auf **Windows, macOS und Ubuntu** über GitHub Actions.
 
