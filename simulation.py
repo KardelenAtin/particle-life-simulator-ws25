@@ -1,5 +1,5 @@
 import numpy as np
-from config import SPACE_MIN, SPACE_MAX
+from config import SPACE_MIN, SPACE_MAX, N_PARTICLE_TYPES
 
 def init_positions(n_particles: int) -> np.ndarray:
     """
@@ -11,6 +11,17 @@ def init_positions(n_particles: int) -> np.ndarray:
         size=(n_particles, 2)
     )
     return positions
+
+def init_types(n_particles: int) -> np.ndarray:
+    """
+    Assign random particle type to each particle.
+    """
+    types = np.random.randint(
+        low=0,
+        high=N_PARTICLE_TYPES,
+        size=n_particles
+    )
+    return types
 
 class Simulation:
     def __init__(self):
