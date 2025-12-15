@@ -23,9 +23,9 @@ def init_types(n_particles: int) -> np.ndarray:
     )
     return types
 
-def init_colors_from_type(types: np.ndarray) -> np.ndarray:
+def init_color_distribution(types: np.ndarray) -> np.ndarray:
     """
-    Map particle types to RGBA colors.
+    Initialize colors based on particle types
     """
     colors = COLOR_DISTRIBUTION[types]
     return colors
