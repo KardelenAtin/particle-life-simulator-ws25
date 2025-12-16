@@ -3,7 +3,7 @@ import random
 #lists all particles in a dictionary 
 particles = []
 
-#gives the particles random position  and velocity
+#gives the particles random position and velocity
 for i in range(4):
     p = {
         "x": random.randint(0,100), 
@@ -25,7 +25,7 @@ def update_velocities(particles, friction):
             p["vx"] *= friction
             p["vy"] *= friction
 
-       
+        
 #delta_t is used for position updates
 delta_t = 0.5
 

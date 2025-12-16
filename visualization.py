@@ -2,6 +2,7 @@ from vispy import app, scene
 import numpy as np
 
 
+#GUI window
 canvas = scene.SceneCanvas(show=True)
 canvas.size = 800, 600
 canvas.title = "GUI Window"
@@ -18,6 +19,7 @@ positions = np.column_stack((x, y))
 
 types = np.random.randint(0, 4, size=n_points)
 
+"""
 #colors-array for particles
 color_dict = {
     0: [1, 0, 0, 1], #red 
@@ -25,11 +27,14 @@ color_dict = {
     2: [0, 0, 1, 1], #blue
     3: [1, 1, 0, 1], #yellow
 }
-#map numbers to colors
+
+#colors 
 colors = []
 for t in types:
     colors.append(color_dict[t])
 colors = np.array(colors, dtype=np.float32)
+"""
+
 #scatter plot
 scatter = scene.visuals.Markers()
 scatter.set_data(positions, face_color=colors, size=10)
