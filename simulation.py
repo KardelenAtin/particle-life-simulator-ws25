@@ -29,3 +29,12 @@ def init_color_distribution(types: np.ndarray) -> np.ndarray:
     """
     colors = COLOR_DISTRIBUTION[types]
     return colors
+
+def init_masses(n_particles: int, mass: float = 1.0) -> np.ndarray:
+    """
+    Assign a physical mass to each particle.
+    """
+    if mass <= 0:
+        raise ValueError("mass must be greater than zero")
+
+    return np.full(n_particles, mass) 
