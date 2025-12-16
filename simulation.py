@@ -1,20 +1,24 @@
 import random
 import numpy as np
-# from config import SPACE_MIN, SPACE_MAX, N_PARTICLE_TYPES, COLOR_DISTRIBUTION , friction, delta_t, width, height
+from config import SPACE_MIN, SPACE_MAX, N_PARTICLE_TYPES, COLOR_DISTRIBUTION , friction, delta_t, MAX_RADIUS
 
-class Simulation:
-    def __init__(self, setting = [{"n":3,"type":2},{"n":4,"type":0}]): 
-        particles = []
-        for s in setting:
-            for p in range(s["n"]):
-                particle = np.array([random.randint(0, 100), random.randint(0, 100), 0, 0, s["type"]])
-                particles.append(particle)
-        self.particles = np.vstack(particles)
-        print(self.particles)
+# --- Particle Initialization Functions ---
 
-        
-if __name__ == "__main__":
-    ll= Simulation([{"n":103,"type":2},{"n":14,"type":0}])
+def init_positions(n_particles: int) -> np.ndarray:
+    """Generate initial particle positions within simulation bounds."""
+    return np.random.uniform(SPACE_MIN, SPACE_MAX, size=(n_particles, 2)).astype(float)
+
+
+def init_types(n_particles: int) -> np.ndarray:
+    """Assign random particle type to each particle."""
+    return np.random.randint(0, N_PARTICLE_TYPES, size=n_particles, dtype=int)
+
+
+def init_color_distribution(types: np.ndarray) -> np.ndarray:
+    """Initialize colors based on particle types."""
+    return COLOR_DISTRIBUTION[types]
+
+
 def init_masses(n_particles: int, mass: float = 1.0) -> np.ndarray:
     """
     Assign a physical mass to each particle.
@@ -53,3 +57,18 @@ def init_particles(n_particles: int):
     bounciness = init_bounciness(n_particles)
 
     return positions, velocities, types, colors, masses, bounciness
+
+# --- Simulation Class ---
+class Simulation:
+    def __init__(self, setting = [{"n":3,"type":2},{"n":4,"type":0}]): 
+        particles = []
+        for s in setting:
+            for p in range(s["n"]):
+                particle = np.array([random.randint(0, 100), random.randint(0, 100), 0, 0, s["type"]])
+                particles.append(particle)
+        self.particles = np.vstack(particles)
+        print(self.particles)
+
+        
+if __name__ == "__main__":
+    ll= Simulation([{"n":103,"type":2},{"n":14,"type":0}])

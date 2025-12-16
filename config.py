@@ -9,26 +9,19 @@ and for visualization.
 SPACE_MIN = -10.0
 SPACE_MAX = 10.0
 
-# simulation timing
-delta_t = 0.1
-friction = 0.98
-
 # number of particle types
 N_PARTICLE_TYPES = 4
 
 
-# colors for each particle type (RGBA)
+# colors for each particle type (RGB)
 COLOR_DISTRIBUTION = np.array([
     [1.0, 0.0, 0.0],  # Red
     [0.0, 1.0, 0.0],  # Green
-    [0.0, 1.0, 0.0],  # Blue
-    [0.0, 1.0, 0.0],  # Yellow
+    [0.0, 0.0, 1.0],  # Blue
+    [1.0, 1.0, 0.0],  # Yellow
 ])
 
-
-
-
-
+# simulation timing
 friction = 0.99
 delta_t = 0.5
-MAX_RADIUS = 100, 100
+MAX_RADIUS = 100
