@@ -38,3 +38,12 @@ def init_masses(n_particles: int, mass: float = 1.0) -> np.ndarray:
         raise ValueError("mass must be greater than zero")
 
     return np.full(n_particles, mass) 
+
+def init_bounciness(n_particles: int, bounciness: float = 0.9) -> np.ndarray:
+    """
+    Assign a bounciness coefficient to each particle.
+    """
+    if not 0.0 <= bounciness <= 1.0:
+        raise ValueError("bounciness must be between 0 and 1")
+
+    return np.full(n_particles, bounciness)
