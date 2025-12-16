@@ -1,40 +1,17 @@
+import random
 import numpy as np
-from config import SPACE_MIN, SPACE_MAX, N_PARTICLE_TYPES, COLOR_DISTRIBUTION
-
-def init_positions(n_particles: int) -> np.ndarray:
-    """
-    Generate initial particle positions within simulation bounds.
-    """
-    positions = np.random.uniform(
-        low=SPACE_MIN,
-        high=SPACE_MAX,
-        size=(n_particles, 2)
-    )
-    return positions
-
-def init_types(n_particles: int) -> np.ndarray:
-    """
-    Assign random particle type to each particle.
-    """
-    types = np.random.randint(
-        low=0,
-        high=N_PARTICLE_TYPES,
-        size=n_particles
-    )
-    return types
-
-def init_color_distribution(types: np.ndarray) -> np.ndarray:
-    """
-    Initialize colors based on particle types
-    """
-    colors = COLOR_DISTRIBUTION[types]
-    return colors
+# from config import SPACE_MIN, SPACE_MAX, N_PARTICLE_TYPES, COLOR_DISTRIBUTION , friction, delta_t, width, height
 
 class Simulation:
-    def __init__(self):
-        self.interaction_matrix = [
-            [0, 1, -1, 0],
-            [-1, 0, 1, 0],
-            [1, -1, 0, 0],
-            [0, 0, 0, 0]
-        ]
+    def __init__(self, setting = [{"n":3,"type":2},{"n":4,"type":0}]): 
+        particles = []
+        for s in setting:
+            for p in range(s["n"]):
+                particle = np.array([random.randint(0, 100), random.randint(0, 100), 0, 0, s["type"]])
+                particles.append(particle)
+        self.particles = np.vstack(particles)
+        print(self.particles)
+
+        
+if __name__ == "__main__":
+    ll= Simulation([{"n":103,"type":2},{"n":14,"type":0}])
