@@ -4,7 +4,7 @@ from config import (
     N_PARTICLE_TYPES, COLOR_DISTRIBUTION,
     friction, delta_t, MAX_RADIUS
 )
-
+from interaction import Interaction
 # --- Build particle types from setting ---
 
 def types_from_setting(setting) -> np.ndarray:
@@ -86,6 +86,11 @@ class Simulation:
         self.masses = init_masses(self.n_particles, mass=mass)
         self.bounciness = init_bounciness(self.n_particles, bounciness=bounciness)
 
+        # interactions
+        self.interaction = Interaction()
+        self.max_distance = float(MAX_RADIUS) #from config
+        self.effect_scale = 1.0
+
         # packed view [x, y, vx, vy, type]
         self.particles = np.column_stack([
             self.positions[:, 0],
@@ -101,6 +106,37 @@ class Simulation:
         self.particles[:, 2:4] = self.velocities
         self.particles[:, 4] = self.types
 
+    def _wrap_positions(self):
+        span = (SPACE_MAX - SPACE_MIN)
+        self.positions = (self.positions - SPACE_MIN) % span + SPACE_MIN
+        
+    def step(self):
+        dv = np.zeros_like(self.velocities)
+
+        for i in range(self.n_particles):
+            for j in range(self.n_particles):
+                if i == j:
+                    continue
+
+                effect = self.interaction.interaction_effect(
+                    pos_i=self.positions[i],
+                    pos_j=self.positions[j],
+                    type_i=int(self.types[i]),
+                    type_j=int(self.types[j]),
+                    max_distance=self.max_distance,
+                )
+                dv[i] += effect
+
+        # velocities update
+        self.velocities += (dv * self.effect_scale) * float(delta_t)
+        self.velocities *= float(friction)
+
+        # positions update
+        self.positions += self.velocities * float(delta_t)
+        self._wrap_positions()
+
+        # keep packed view updated
+        self.update_particles_view()
 
 if __name__ == "__main__":
     sim = Simulation(
