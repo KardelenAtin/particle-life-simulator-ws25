@@ -55,3 +55,16 @@ def init_velocities(n_particles: int) -> np.ndarray:
     Returns shape: (n_particles, 2)
     """
     return np.zeros((n_particles, 2), dtype=float)
+
+def init_particles(n_particles: int):
+    """
+    Convenience function: returns all particle arrays.
+    """
+    positions = init_positions(n_particles)
+    types = init_types(n_particles)
+    colors = init_color_distribution(types)
+    velocities = init_velocities(n_particles)
+    masses = init_masses(n_particles)
+    bounciness = init_bounciness(n_particles)
+
+    return positions, velocities, types, colors, masses, bounciness
