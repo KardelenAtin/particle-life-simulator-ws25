@@ -1,5 +1,7 @@
 import random 
 
+particle_types = ['A', 'B', 'C', 'D']
+
 #lists all particles in a dictionary 
 particles = []
 
@@ -10,6 +12,7 @@ for i in range(4):
         "y": random.randint(0,100),
         "vx": random.randint(-1,1),
         "vy": random.randint(-1,1),
+        "typ": particle_types[i]
     }
     particles.append(p)
 
@@ -42,11 +45,18 @@ def update_positions(particles, delta_t):
         p["y"] = new_y
 
 
+width, height = 100, 100
+
+def apply_wraparound(particles, width, height):
+     for p in particles: 
+          new_width_x = p["x"] % width
+          new_height_y = p["y"] % height
+
+          p["x"] = new_width_x
+          p["y"] = new_height_y
+
 #Aufrufen von den zwei Funktionen
 update_velocities(particles, friction)
 update_positions(particles, delta_t)
-
-
-
-
-
+apply_wraparound(particles, width, height)
+print(particles)
