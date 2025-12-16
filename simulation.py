@@ -47,3 +47,11 @@ def init_bounciness(n_particles: int, bounciness: float = 0.9) -> np.ndarray:
         raise ValueError("bounciness must be between 0 and 1")
 
     return np.full(n_particles, bounciness)
+
+def init_velocities(n_particles: int) -> np.ndarray:
+    """
+    Initialize particle velocities.
+    Minimal version: all start with 0 velocity.
+    Returns shape: (n_particles, 2)
+    """
+    return np.zeros((n_particles, 2), dtype=float)
