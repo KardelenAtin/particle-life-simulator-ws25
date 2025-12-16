@@ -9,6 +9,10 @@ and for visualization.
 SPACE_MIN = -10.0
 SPACE_MAX = 10.0
 
+# simulation timing
+delta_t = 0.1
+friction = 0.98
+
 # number of particle types
 N_PARTICLE_TYPES = 4
 
