@@ -42,7 +42,7 @@ def init_velocities(n_particles: int) -> np.ndarray:
 
 def init_color_distribution(types: np.ndarray) -> np.ndarray:
     """Initialize colors based on particle types."""
-    return COLOR_DISTRIBUTION[types]
+    return np.c_[COLOR_DISTRIBUTION[types], np.ones(len(types))]
 
 
 def init_masses(n_particles: int, mass: float = 1.0) -> np.ndarray:
