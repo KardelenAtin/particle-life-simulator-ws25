@@ -2,6 +2,21 @@ import random
 import numpy as np
 from config import SPACE_MIN, SPACE_MAX, N_PARTICLE_TYPES, COLOR_DISTRIBUTION , friction, delta_t, MAX_RADIUS
 
+# --- Build particle types from setting ---
+
+def types_from_setting(setting) -> np.ndarray:
+    """
+    setting = [{"n": 3, "type": 2}, {"n": 4, "type": 0}]
+    """
+    types = []
+    for s in setting:
+        n = int(s["n"])
+        t = int(s["type"])
+        if not (0 <= t < N_PARTICLE_TYPES):
+            raise ValueError(f"Particle type {t} out of range [0, {N_PARTICLE_TYPES-1}]")
+        types.extend([t] * n)
+    return np.array(types, dtype=int)
+
 # --- Particle Initialization Functions ---
 
 def init_positions(n_particles: int) -> np.ndarray:
