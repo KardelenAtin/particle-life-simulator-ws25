@@ -19,3 +19,7 @@ COLOR_DISTRIBUTION = np.array([
     [0.0, 0.0, 1.0],  # Blue
     [1.0, 1.0, 0.0],  # Yellow
 ])
+
+friction = 0.99
+delta_t = 0.5
+MAX_RADIUS = 100, 100
