@@ -4,10 +4,10 @@ from simulation import Simulation
 from config import SPACE_MIN, SPACE_MAX
 
 sim = Simulation([
-    {"n":250, "type": 0}, 
-    {"n":250, "type": 1}, 
-    {"n":250, "type": 2}, 
-    {"n":250, "type": 3}])
+    {"n":25, "type": 0}, 
+    {"n":25, "type": 1}, 
+    {"n":25, "type": 2}, 
+    {"n":25, "type": 3}])
 
 #GUI window
 canvas = scene.SceneCanvas(keys="interactive", show=True)
@@ -30,11 +30,9 @@ scatter.set_data(
 )
 view.add(scatter)
 
-SPEEDUP = 5
 
 def update(event):
-    for _ in range(SPEEDUP):
-        sim.step()
+    sim.step()
     scatter.set_data(
         sim.positions.astype(np.float32),
         face_color = sim.colors.astype(np.float32),
