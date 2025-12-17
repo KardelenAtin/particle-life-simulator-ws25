@@ -37,8 +37,7 @@ def init_velocities(n_particles: int) -> np.ndarray:
     Minimal version: all start with 0 velocity.
     Returns shape: (n_particles, 2)
     """
-    return np.zeros((n_particles, 2), dtype=float)
-
+    return np.random.normal(0.0, 0.3, size=(n_particles, 2)).astype(float)
 
 def init_color_distribution(types: np.ndarray) -> np.ndarray:
     """Initialize colors based on particle types."""
