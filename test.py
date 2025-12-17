@@ -4,7 +4,7 @@ from config import SPACE_MIN, SPACE_MAX, MAX_RADIUS
 from simulation import Simulation
 from interaction import Interaction
 
-
+# run with: python -m pytest -q test.py
 def test_positions_update():
     sim = Simulation(setting=[{"n": 10, "type": 0}, {"n": 10, "type": 1}])
     p0 = sim.positions.copy()
