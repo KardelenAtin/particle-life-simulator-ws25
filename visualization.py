@@ -1,7 +1,7 @@
 from vispy import app, scene
 import numpy as np
 from simulation import Simulation
-
+from config import SPACE_MIN, SPACE_MAX
 
 sim = Simulation([
     {"n":250, "type": 0}, 
@@ -16,7 +16,10 @@ canvas.title = "Particles"
 
 view = canvas.central_widget.add_view()
 view.camera = scene.cameras.PanZoomCamera(aspect=1)
-
+view.camera.set_range(
+    x=(SPACE_MAX, SPACE_MIN),
+    y=(SPACE_MAX, SPACE_MIN)
+)
 
 #scatter plot
 scatter = scene.visuals.Markers()
@@ -27,15 +30,17 @@ scatter.set_data(
 )
 view.add(scatter)
 
+SPEEDUP = 5
+
 def update(event):
-    sim.step()
+    for _ in range(SPEEDUP):
+        sim.step()
     scatter.set_data(
         sim.positions.astype(np.float32),
         face_color = sim.colors.astype(np.float32),
-        size = 10
     )
 
-timer = app.Timer(interval=1/120, connect=update, start=True)
+timer = app.Timer(interval=1/60, connect=update, start=True)
 
 if __name__ == '__main__':
     app.run()
