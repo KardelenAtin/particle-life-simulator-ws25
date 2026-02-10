@@ -2,7 +2,7 @@ import numpy as np
 from config import (
     SPACE_MIN, SPACE_MAX,
     N_PARTICLE_TYPES, COLOR_DISTRIBUTION,
-    friction, delta_t, MAX_RADIUS
+    FRICTION, DELTA_T, MAX_RADIUS
 )
 from interaction import Interaction
 from scipy.spatial import cKDTree
