@@ -130,9 +130,9 @@ class Simulation:
             dv[j] -= effect 
 
         # Update Physik (NUR EINMAL)
-        self.velocities += (dv * self.effect_scale) * float(delta_t)
-        self.velocities *= float(friction)
-        self.positions += self.velocities * float(delta_t)
+        self.velocities += (dv * self.effect_scale) * float(DELTA_T)
+        self.velocities *= float(FRICTION)
+        self.positions += self.velocities * float(DELTA_T)
         
         # Randbedingungen & View-Sync
         self._wrap_positions()
