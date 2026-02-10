@@ -5,6 +5,7 @@ from config import (
     friction, delta_t, MAX_RADIUS
 )
 from interaction import Interaction
+from scipy.spatial import cKDTree
 # --- Build particle types from setting ---
 
 def types_from_setting(setting) -> np.ndarray:
@@ -111,30 +112,30 @@ class Simulation:
         
     def step(self):
         dv = np.zeros_like(self.velocities)
+        
+        # 1. Schnelle Nachbarsuche
+        tree = cKDTree(self.positions)
+        pairs = tree.query_pairs(self.max_distance)
 
-        for i in range(self.n_particles):
-            for j in range(self.n_particles):
-                if i == j:
-                    continue
+        # 2. Kräfte berechnen
+        for i, j in pairs:
+            effect = self.interaction.interaction_effect(
+                pos_i=self.positions[i],
+                pos_j=self.positions[j],
+                type_i=int(self.types[i]),
+                type_j=int(self.types[j]),
+                max_distance=self.max_distance,
+            )
+            dv[i] += effect
+            dv[j] -= effect 
 
-                effect = self.interaction.interaction_effect(
-                    pos_i=self.positions[i],
-                    pos_j=self.positions[j],
-                    type_i=int(self.types[i]),
-                    type_j=int(self.types[j]),
-                    max_distance=self.max_distance,
-                )
-                dv[i] += effect
-
-        # velocities update
+        # Update Physik (NUR EINMAL)
         self.velocities += (dv * self.effect_scale) * float(delta_t)
         self.velocities *= float(friction)
-
-        # positions update
         self.positions += self.velocities * float(delta_t)
+        
+        # Randbedingungen & View-Sync
         self._wrap_positions()
-
-        # keep packed view updated
         self.update_particles_view()
 
 if __name__ == "__main__":
