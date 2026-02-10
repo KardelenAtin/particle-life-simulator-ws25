@@ -5,10 +5,10 @@ class Interaction:
     def __init__(self, matrix: np.ndarray | None = None):
         if matrix is None:
             matrix = np.array([
-                [0,  1, -1,  0],
-                [-1, 0,  1,  0],
-                [1, -1,  0,  0],
-                [0,  0,  0,  0],
+                [ 0.1,  1.0, -1.0,  0.5], # Rot interagiert mit Gelb
+                [-1.0,  0.1,  1.0, -0.5], 
+                [ 1.0, -1.0,  0.1,  0.2], 
+                [ 0.4, -0.2,  0.3,  0.1], 
             ], dtype=float)
         self.matrix = matrix.astype(float)
 
