@@ -4,10 +4,10 @@ from simulation import Simulation
 from config import SPACE_MIN, SPACE_MAX
 
 sim = Simulation([
-    {"n":25, "type": 0}, 
-    {"n":25, "type": 1}, 
-    {"n":25, "type": 2}, 
-    {"n":25, "type": 3}])
+    {"n":50, "type": 0}, 
+    {"n":50, "type": 1}, 
+    {"n":50, "type": 2}, 
+    {"n":50, "type": 3}])
 
 #GUI window
 canvas = scene.SceneCanvas(keys="interactive", show=True)
