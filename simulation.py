@@ -6,7 +6,13 @@ from config import (
 )
 from interaction import Interaction
 from scipy.spatial import cKDTree
+from numba import njit
 # --- Build particle types from setting ---
+@njit
+def apply_physics_jit(velocities, dv, effect_scale, delta_t, friction):
+    velocities += (dv * effect_scale) * delta_t
+    velocities *= friction
+    return velocities
 
 def types_from_setting(setting) -> np.ndarray:
     """
@@ -130,8 +136,11 @@ class Simulation:
 
         self.velocities += np.random.uniform(-0.01, 0.01, size=self.velocities.shape)
 
-        self.velocities += (dv * self.effect_scale) * float(DELTA_T)
-        self.velocities *= float(FRICTION)
+        self.velocities = apply_physics_jit(
+            self.velocities, dv, self.effect_scale, 
+            float(DELTA_T), float(FRICTION)
+        )
+        
         self.positions += self.velocities * float(DELTA_T)
         
         self._wrap_positions()
