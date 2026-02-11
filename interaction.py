@@ -5,11 +5,13 @@ class Interaction:
     def __init__(self, matrix: np.ndarray | None = None):
         if matrix is None:
             matrix = np.array([
-                [ 0.1,  1.0, -1.0,  0.5], # Rot interagiert mit Gelb
-                [-1.0,  0.1,  1.0, -0.5], 
-                [ 1.0, -1.0,  0.1,  0.2], 
-                [ 0.4, -0.2,  0.3,  0.1], 
+                [ 0.5, -0.4, -0.2,  0.1],  # Rot
+                [-0.4,  0.5,  0.1, -0.2],  # Grün
+                [-0.2,  0.1,  0.5, -0.4],  # Blau
+                [ 0.1, -0.2, -0.4,  0.5],  # Gelb
             ], dtype=float)
+
+
         self.matrix = matrix.astype(float)
 
     def get_strength(self, type_i: int, type_j: int) -> float:
