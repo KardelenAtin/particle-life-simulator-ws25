@@ -15,10 +15,10 @@ N_PARTICLE_TYPES = 4
 
 # colors for each particle type (RGB)
 COLOR_DISTRIBUTION = np.array([
-    [1.0, 0.0, 0.0],  # Red
-    [0.0, 1.0, 0.0],  # Green
-    [0.0, 0.0, 1.0],  # Blue
-    [1.0, 1.0, 0.0],  # Yellow
+    [0.70, 0.30, 1.00],  # Violett
+    [0.75, 1.00, 0.80],  # Mint
+    [1.00, 0.40, 0.70],  # Pink
+    [0.10, 0.40, 1.00],  # Tiefblau
 ])
 
 # simulation timing

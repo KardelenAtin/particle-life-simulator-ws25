@@ -26,11 +26,8 @@ def types_from_setting(setting) -> np.ndarray:
 # --- Particle Initialization Functions ---
 
 def init_positions(n_particles: int) -> np.ndarray:
-    """Generate initial particle positions within simulation bounds."""
-    return np.random.uniform(
-        SPACE_MIN, SPACE_MAX, size=(n_particles, 2)
-    ).astype(float)
-
+    """Generate initial particle positions within simulation."""
+    return np.random.uniform(SPACE_MIN, SPACE_MAX, size=(n_particles, 2))
 
 def init_velocities(n_particles: int) -> np.ndarray:
     """
