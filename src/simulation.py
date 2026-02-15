@@ -113,6 +113,28 @@ class Simulation:
         span = (SPACE_MAX - SPACE_MIN)
         self.positions = (self.positions - SPACE_MIN) % span + SPACE_MIN
         
+    def position_bounciness(self):
+        """Bounce off boundaries, scaling rebound velocity by bounciness."""
+        for dim in (0, 1):
+            low, high = SPACE_MIN, SPACE_MAX
+
+            # lower wall
+            mask_low = self.positions[:, dim] < low
+            if np.any(mask_low):
+                self.positions[mask_low, dim] = low + (
+                    low - self.positions[mask_low, dim]
+                )
+                self.velocities[mask_low, dim] *= -self.bounciness[mask_low]
+
+            # upper wall
+            mask_high = self.positions[:, dim] > high
+            if np.any(mask_high):
+                self.positions[mask_high, dim] = high - (
+                    self.positions[mask_high, dim] - high
+                )
+                self.velocities[mask_high, dim] *= -self.bounciness[mask_high]
+
+
     def step(self):
         dv = np.zeros_like(self.velocities)
         
@@ -130,7 +152,9 @@ class Simulation:
                 int(self.types[j]), int(self.types[i]),
                 self.max_distance
             )
+
         dv /= self.masses[:, None]
+
         self.velocities += np.random.uniform(-0.01, 0.01, size=self.velocities.shape)
 
         self.velocities = apply_physics_jit(
@@ -140,7 +164,8 @@ class Simulation:
         
         self.positions += self.velocities * float(DELTA_T)
         
-        self._wrap_positions()
+        #self._wrap_positions()
+        self.position_bounciness()
         self.update_particles_view()
 
 if __name__ == "__main__":
