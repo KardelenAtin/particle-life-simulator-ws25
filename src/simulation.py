@@ -68,20 +68,6 @@ def init_bounciness(n_particles: int, bounciness: float = 0.9) -> np.ndarray:
         raise ValueError("bounciness must be between 0 and 1")
     return np.full(n_particles, bounciness, dtype=float)
 
-def position_bounciness(self):
-    for dim in (0, 1):
-        low, high = SPACE_MIN, SPACE_MAX
-
-        mask_low = self.positions[:, dim] < low 
-        if np.any(mask_low):
-            self.positions[mask_low, dim] = low + (low - self.positions[mask_low, dim])
-            self.velocities[mask_low, dim] *= -self.bounciness[mask_low]
-        
-        mask_high = self.positions[:, dim] > high
-        if np.any(mask_high):
-            self.positions[mask_high, dim] = high - (self.positions[mask_high, dim] - high)
-            self.velocities[mask_high, dim] *= -self.bounciness[mask_high]
-
 
 # --- Simulation Class ---
 
@@ -130,6 +116,28 @@ class Simulation:
         span = (SPACE_MAX - SPACE_MIN)
         self.positions = (self.positions - SPACE_MIN) % span + SPACE_MIN
         
+    def position_bounciness(self):
+        """Bounce off boundaries, scaling rebound velocity by bounciness."""
+        for dim in (0, 1):
+            low, high = SPACE_MIN, SPACE_MAX
+
+            # lower wall
+            mask_low = self.positions[:, dim] < low
+            if np.any(mask_low):
+                self.positions[mask_low, dim] = low + (
+                    low - self.positions[mask_low, dim]
+                )
+                self.velocities[mask_low, dim] *= -self.bounciness[mask_low]
+
+            # upper wall
+            mask_high = self.positions[:, dim] > high
+            if np.any(mask_high):
+                self.positions[mask_high, dim] = high - (
+                    self.positions[mask_high, dim] - high
+                )
+                self.velocities[mask_high, dim] *= -self.bounciness[mask_high]
+
+
     def step(self):
         dv = np.zeros_like(self.velocities)
         
