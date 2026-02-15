@@ -133,7 +133,7 @@ class Simulation:
                 int(self.types[j]), int(self.types[i]),
                 self.max_distance
             )
-
+        dv /= self.masses[:, None]
         self.velocities += np.random.uniform(-0.01, 0.01, size=self.velocities.shape)
 
         self.velocities = apply_physics_jit(
