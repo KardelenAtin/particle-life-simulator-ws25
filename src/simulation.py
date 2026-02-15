@@ -72,7 +72,7 @@ def position_bounciness(self):
     for dim in (0, 1):
         low, high = SPACE_MIN, SPACE_MAX
 
-        mask_low = self.position[:, dim] < low 
+        mask_low = self.positions[:, dim] < low 
         if np.any(mask_low):
             self.positions[mask_low, dim] = low + (low - self.positions[mask_low, dim])
             self.velocities[mask_low, dim] *= -self.bounciness[mask_low]
@@ -159,7 +159,8 @@ class Simulation:
         
         self.positions += self.velocities * float(DELTA_T)
         
-        self._wrap_positions()
+        #self._wrap_positions()
+        self.position_bounciness()
         self.update_particles_view()
 
 if __name__ == "__main__":
