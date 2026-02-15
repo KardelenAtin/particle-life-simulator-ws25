@@ -111,10 +111,6 @@ class Simulation:
         self.particles[:, 0:2] = self.positions
         self.particles[:, 2:4] = self.velocities
         self.particles[:, 4] = self.types
-
-    def _wrap_positions(self):
-        span = (SPACE_MAX - SPACE_MIN)
-        self.positions = (self.positions - SPACE_MIN) % span + SPACE_MIN
         
     def position_bounciness(self):
         """Bounce off boundaries, scaling rebound velocity by bounciness."""
@@ -167,7 +163,6 @@ class Simulation:
         
         self.positions += self.velocities * float(DELTA_T)
         
-        #self._wrap_positions()
         self.position_bounciness()
         self.update_particles_view()
 
