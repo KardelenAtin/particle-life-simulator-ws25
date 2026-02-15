@@ -1,8 +1,8 @@
 import numpy as np
 
-from config import SPACE_MIN, SPACE_MAX, MAX_RADIUS
-from simulation import Simulation
-from interaction import Interaction
+from src.config import SPACE_MIN, SPACE_MAX, MAX_RADIUS
+from src.simulation import Simulation
+from src.interaction import Interaction
 
 # run with: python -m pytest -q test.py
 def test_positions_update():
@@ -21,10 +21,18 @@ def test_attraction_repulsion_direction():
     ], dtype=float))
 
     pos_i = np.array([0.0, 0.0])
-    pos_j = np.array([1.0, 0.0])
+    dist = 0.3 * MAX_RADIUS
+    pos_j = np.array([dist, 0.0])
 
-    assert inter.interaction_effect(pos_i, pos_j, 0, 0, MAX_RADIUS)[0] > 0
-    assert inter.interaction_effect(pos_i, pos_j, 0, 1, MAX_RADIUS)[0] < 0
+    eff_attract = inter.interaction_effect(pos_i, pos_j, 0, 0, MAX_RADIUS)
+    eff_repulse = inter.interaction_effect(pos_i, pos_j, 0, 1, MAX_RADIUS)
+
+    direction = (pos_j - pos_i) / np.linalg.norm(pos_j - pos_i)
+
+    assert np.linalg.norm(eff_attract) > 0
+    assert np.linalg.norm(eff_repulse) > 0
+    assert np.dot(eff_attract, direction) > 0
+    assert np.dot(eff_repulse, direction) < 0
 
 
 def test_simulation_stability():

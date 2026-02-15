@@ -6,8 +6,8 @@ and for visualization.
 """
 
 # simulation space limits (has to be symmetric around zero)
-SPACE_MIN = -10.0
-SPACE_MAX = 10.0
+SPACE_MIN = -100.0
+SPACE_MAX = 100.0
 
 # number of particle types
 N_PARTICLE_TYPES = 4
@@ -22,6 +22,6 @@ COLOR_DISTRIBUTION = np.array([
 ])
 
 # simulation timing
-FRICTION = 0.995
-DELTA_T = 0.8
-MAX_RADIUS = 6.0
+FRICTION = 0.998
+DELTA_T = 1.2
+MAX_RADIUS = 12.0

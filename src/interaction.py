@@ -5,11 +5,13 @@ class Interaction:
     def __init__(self, matrix: np.ndarray | None = None):
         if matrix is None:
             matrix = np.array([
-                [ 0.1,  1.0, -1.0,  0.5], # Rot interagiert mit Gelb
-                [-1.0,  0.1,  1.0, -0.5], 
-                [ 1.0, -1.0,  0.1,  0.2], 
-                [ 0.4, -0.2,  0.3,  0.1], 
+                [ 0.5, -0.4, -0.2,  0.1],  # Rot
+                [-0.4,  0.5,  0.1, -0.2],  # Grün
+                [-0.2,  0.1,  0.5, -0.4],  # Blau
+                [ 0.1, -0.2, -0.4,  0.5],  # Gelb
             ], dtype=float)
+
+
         self.matrix = matrix.astype(float)
 
     def get_strength(self, type_i: int, type_j: int) -> float:
@@ -41,8 +43,16 @@ class Interaction:
 
         direction = delta / dist
         # nearer = stronger
-        falloff = 1.0 - (dist / max_distance)
-        #return final interaction vector
-        return direction * strength * falloff
+        r = dist / max_distance  # 0..1
+
+        if r < 0.15:
+             factor = -1.0
+        elif r < 0.60:
+             factor = 0.8 * (0.60 - r)
+        else:
+             factor = 0.0
+
+        return direction * strength * factor
+
 
 

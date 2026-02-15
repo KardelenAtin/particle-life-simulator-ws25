@@ -1,7 +1,7 @@
 from vispy import app, scene
 import numpy as np
-from simulation import Simulation
-from config import SPACE_MIN, SPACE_MAX
+from src.simulation import Simulation
+from src.config import SPACE_MIN, SPACE_MAX
 
 sim = Simulation([
     {"n":500, "type": 0}, 

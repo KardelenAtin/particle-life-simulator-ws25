@@ -1,12 +1,18 @@
 import numpy as np
-from config import (
+from src.config import (
     SPACE_MIN, SPACE_MAX,
     N_PARTICLE_TYPES, COLOR_DISTRIBUTION,
     FRICTION, DELTA_T, MAX_RADIUS
 )
-from interaction import Interaction
+from src.interaction import Interaction
 from scipy.spatial import cKDTree
+from numba import njit
 # --- Build particle types from setting ---
+@njit
+def apply_physics_jit(velocities, dv, effect_scale, delta_t, friction):
+    velocities += (dv * effect_scale) * delta_t
+    velocities *= friction
+    return velocities
 
 def types_from_setting(setting) -> np.ndarray:
     """
@@ -110,28 +116,30 @@ class Simulation:
     def step(self):
         dv = np.zeros_like(self.velocities)
         
-        # 1. Schnelle Nachbarsuche
         tree = cKDTree(self.positions)
         pairs = tree.query_pairs(self.max_distance)
 
-        # 2. Kräfte berechnen
         for i, j in pairs:
-            effect = self.interaction.interaction_effect(
-                pos_i=self.positions[i],
-                pos_j=self.positions[j],
-                type_i=int(self.types[i]),
-                type_j=int(self.types[j]),
-                max_distance=self.max_distance,
+            dv[i] += self.interaction.interaction_effect(
+                self.positions[i], self.positions[j],
+                int(self.types[i]), int(self.types[j]),
+                self.max_distance
             )
-            dv[i] += effect
-            dv[j] -= effect 
+            dv[j] += self.interaction.interaction_effect(
+                self.positions[j], self.positions[i],
+                int(self.types[j]), int(self.types[i]),
+                self.max_distance
+            )
+        dv /= self.masses[:, None]
+        self.velocities += np.random.uniform(-0.01, 0.01, size=self.velocities.shape)
 
-        # Update Physik (NUR EINMAL)
-        self.velocities += (dv * self.effect_scale) * float(DELTA_T)
-        self.velocities *= float(FRICTION)
+        self.velocities = apply_physics_jit(
+            self.velocities, dv, self.effect_scale, 
+            float(DELTA_T), float(FRICTION)
+        )
+        
         self.positions += self.velocities * float(DELTA_T)
         
-        # Randbedingungen & View-Sync
         self._wrap_positions()
         self.update_particles_view()
 

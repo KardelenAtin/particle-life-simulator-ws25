@@ -1,0 +1,7 @@
+numpy
+scipy
+vispy
+numba
+pytest
+pytest-cov
+ruff
