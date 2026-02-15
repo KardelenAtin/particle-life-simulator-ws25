@@ -43,8 +43,16 @@ class Interaction:
 
         direction = delta / dist
         # nearer = stronger
-        falloff = 1.0 - (dist / max_distance)
-        #return final interaction vector
-        return direction * strength * falloff
+        r = dist / max_distance  # 0..1
+
+        if r < 0.15:
+             factor = -1.0
+        elif r < 0.60:
+             factor = 0.8 * (0.60 - r)
+        else:
+             factor = 0.0
+
+        return direction * strength * factor
+
 
 
