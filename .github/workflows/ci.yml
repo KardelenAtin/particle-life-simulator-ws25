@@ -2,9 +2,9 @@ name: Python package
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ "3.11", "3.12", "3.13" ]
+        python-version: ["3.11", "3.12", "3.13"]
 
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,11 @@ jobs:
           pip install -r requirements.txt
 
       - name: Lint with ruff
-        run: ruff check --output-format=github .
+        run: |
+          ruff check --output-format=github .
 
       - name: Test with pytest and check coverage
-        run: pytest --cov=. --cov-report=term --cov-fail-under=70
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          pytest --cov=src --cov-report=term --cov-fail-under=70
