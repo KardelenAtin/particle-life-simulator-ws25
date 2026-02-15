@@ -1,7 +1,6 @@
 import numpy as np
 
 class Interaction:
-
     def __init__(self, matrix: np.ndarray | None = None):
         if matrix is None:
             matrix = np.array([
@@ -10,14 +9,9 @@ class Interaction:
                 [-0.2,  0.1,  0.5, -0.4],  # Blau
                 [ 0.1, -0.2, -0.4,  0.5],  # Gelb
             ], dtype=float)
-
-
         self.matrix = matrix.astype(float)
 
     def get_strength(self, type_i: int, type_j: int) -> float:
-        """
-        Return the interaction strength between two particle types
-        """
         return float(self.matrix[type_i, type_j])
 
     def interaction_effect(
@@ -28,11 +22,7 @@ class Interaction:
         type_j: int,
         max_distance: float,
     ) -> np.ndarray:
-        """
-        Returns a 2D vector (dx, dy) that can be added to velocity
-        """
         strength = self.get_strength(type_i, type_j)
-        # No intetaction if strength from the matrix
         if strength == 0:
             return np.zeros(2, dtype=float)
 
@@ -42,17 +32,26 @@ class Interaction:
             return np.zeros(2, dtype=float)
 
         direction = delta / dist
-        # nearer = stronger
         r = dist / max_distance  # 0..1
 
-        if r < 0.15:
-             factor = -1.0
-        elif r < 0.60:
-             factor = 0.8 * (0.60 - r)
+        def smoothstep(x: float) -> float:
+            x = float(np.clip(x, 0.0, 1.0))
+            return x * x * (3 - 2 * x)
+
+        repulsion_radius = 0.15
+        attraction_radius = 0.60
+
+        if r < repulsion_radius:
+            t = r / repulsion_radius
+            factor = -(1.0 - smoothstep(t))   # -1 -> 0 weich
+        elif r < attraction_radius:
+            t = (r - repulsion_radius) / (attraction_radius - repulsion_radius)
+            factor = smoothstep(1.0 - t)      # 1 -> 0 weich
         else:
-             factor = 0.0
+            factor = 0.0
 
         return direction * strength * factor
+
 
 
 
