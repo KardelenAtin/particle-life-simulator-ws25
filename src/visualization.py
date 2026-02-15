@@ -18,8 +18,9 @@ view = canvas.central_widget.add_view()
 view.camera = scene.cameras.PanZoomCamera(aspect=1)
 view.camera.set_range(
     x=(SPACE_MIN, SPACE_MAX),
-    y=(SPACE_MIN, SPACE_MAX)
-)
+    y=(SPACE_MIN, SPACE_MAX),
+    margin=0)
+
 
 #scatter plot
 scatter = scene.visuals.Markers()
@@ -27,7 +28,7 @@ scatter.set_gl_state('translucent', blend=True, depth_test=False)
 scatter.set_data(
     sim.positions.astype(np.float32),
     face_color = sim.colors.astype(np.float32),
-    size = 10
+    size = 6
 )
 view.add(scatter)
 
@@ -39,7 +40,7 @@ def update(event):
         face_color = sim.colors.astype(np.float32),
     )
 
-timer = app.Timer(interval=1/120, connect=update, start=True)
+timer = app.Timer(interval=1/60, connect=update, start=True)
 
 if __name__ == '__main__':
     app.run()
