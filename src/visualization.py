@@ -34,18 +34,24 @@ def main():
     )
     view.add(scatter)
 
+    frame_counter = 0
+    
     def update(event):
-        sim.step()
+        nonlocal frame_counter
+        frame_counter += 1
+
+        if frame_counter % 2 == 0:
+            sim.step()
+        
         scatter.set_data(
             sim.positions.astype(np.float32),
             face_color=sim.colors.astype(np.float32),
         )
 
     timer = app.Timer(interval=1/60, connect=update, start=True)
-
     app.run()
 
 
-if __name__ == "_main_":
+if __name__ == "__main__":
     main()
 
