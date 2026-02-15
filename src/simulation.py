@@ -68,6 +68,20 @@ def init_bounciness(n_particles: int, bounciness: float = 0.9) -> np.ndarray:
         raise ValueError("bounciness must be between 0 and 1")
     return np.full(n_particles, bounciness, dtype=float)
 
+def position_bounciness(self):
+    for dim in (0, 1):
+        low, high = SPACE_MIN, SPACE_MAX
+
+        mask_low = self.position[:, dim] < low 
+        if np.any(mask_low):
+            self.positions[mask_low, dim] = low + (low - self.positions[mask_low, dim])
+            self.velocities[mask_low, dim] *= -self.bounciness[mask_low]
+        
+        mask_high = self.positions[:, dim] > high
+        if np.any(mask_high):
+            self.positions[mask_high, dim] = high - (self.positions[mask_high, dim] - high)
+            self.velocities[mask_high, dim] *= -self.bounciness[mask_high]
+
 
 # --- Simulation Class ---
 
@@ -133,6 +147,8 @@ class Simulation:
                 int(self.types[j]), int(self.types[i]),
                 self.max_distance
             )
+
+        dv /= self.masses[:, None]
 
         self.velocities += np.random.uniform(-0.01, 0.01, size=self.velocities.shape)
 
