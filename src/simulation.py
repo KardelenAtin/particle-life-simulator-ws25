@@ -1,10 +1,10 @@
 import numpy as np
-from config import (
+from src.config import (
     SPACE_MIN, SPACE_MAX,
     N_PARTICLE_TYPES, COLOR_DISTRIBUTION,
     FRICTION, DELTA_T, MAX_RADIUS
 )
-from interaction import Interaction
+from src.interaction import Interaction
 from scipy.spatial import cKDTree
 from numba import njit
 # --- Build particle types from setting ---

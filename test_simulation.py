@@ -1,8 +1,8 @@
 import numpy as np
 
-from config import SPACE_MIN, SPACE_MAX, MAX_RADIUS
-from simulation import Simulation
-from interaction import Interaction
+from src.config import SPACE_MIN, SPACE_MAX, MAX_RADIUS
+from src.simulation import Simulation
+from src.interaction import Interaction
 
 # run with: python -m pytest -q test.py
 def test_positions_update():
