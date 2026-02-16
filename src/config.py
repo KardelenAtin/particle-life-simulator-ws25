@@ -22,6 +22,6 @@ COLOR_DISTRIBUTION = np.array([
 ])
 
 # simulation timing
-FRICTION = 0.998
-DELTA_T = 1.2
-MAX_RADIUS = 12.0
+FRICTION = 0.92
+DELTA_T = 0.1
+MAX_RADIUS = 20.0
