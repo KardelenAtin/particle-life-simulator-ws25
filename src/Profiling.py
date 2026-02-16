@@ -2,14 +2,14 @@ import cProfile
 import pstats
 import io
 import time
-import numpy as np
+
 from src.simulation import Simulation
 
 def run_benchmark():
     """
     Measures simulation performance and saves data for Snakeviz visualization.
     """
-   
+    
     setup = [{"n": 500, "type": i} for i in range(4)]
     sim = Simulation(setup)
     steps = 200
@@ -33,7 +33,7 @@ def run_benchmark():
 
     # 3. Results
     duration = end_t - start_t
-    print(f"\n--- Performance Results ---")
+    print("\n--- Performance Results ---")
     print(f"Total Time: {duration:.2f}s")
     print(f"Simulation Speed: {steps / duration:.2f} FPS")
 
