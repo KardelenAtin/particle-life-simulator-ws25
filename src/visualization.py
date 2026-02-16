@@ -24,20 +24,20 @@ def main():
         y=(SPACE_MIN, SPACE_MAX),
         margin=0
     )
-
+    
     scatter = scene.visuals.Markers()
     scatter.set_gl_state('translucent', blend=True, depth_test=False)
+    
     scatter.set_data(
         sim.positions.astype(np.float32),
         face_color=sim.colors.astype(np.float32),
-        edge_width=0
-        size=2.5
+        size=4
     )
     view.add(scatter)
 
     frame_counter = 0
     
-    def update(event):
+    def update(_):
         nonlocal frame_counter
         frame_counter += 1
 
@@ -47,8 +47,7 @@ def main():
         scatter.set_data(
             sim.positions.astype(np.float32),
             face_color=sim.colors.astype(np.float32),
-            edge_width=0,
-            size=2.5
+            size=4
         )
         canvas.update()
 
@@ -71,6 +70,7 @@ def main():
 
             else:
                 timer.start()
+    
     
     app.run()
 
