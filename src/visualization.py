@@ -30,7 +30,8 @@ def main():
     scatter.set_data(
         sim.positions.astype(np.float32),
         face_color=sim.colors.astype(np.float32),
-        size=6
+        edge_width=0
+        size=2.5
     )
     view.add(scatter)
 
@@ -46,16 +47,34 @@ def main():
         scatter.set_data(
             sim.positions.astype(np.float32),
             face_color=sim.colors.astype(np.float32),
+            edge_width=0,
+            size=2.5
         )
+        canvas.update()
 
     timer = app.Timer(interval=1/60, connect=update, start=True)
+
+    @canvas.events.key_press.connect
+
+    def on_key_press(event):
+        """Handle keyboard inputs for interaction."""
+        if event.text.lower() == 'r':
+            sim.positions = np.random.uniform(SPACE_MIN, SPACE_MAX, size=(sim.n_particles, 2))
+        
+        elif event.text.lower() == 'm':
+            sim.interaction.matrix = np.random.uniform(-1, 1, (4, 4))
+
+        elif event.text.lower() == 'p':
+            
+            if timer.running:
+                timer.stop()
+
+            else:
+                timer.start()
+    
     app.run()
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD
-    main()
-=======
     main()
 
->>>>>>> 6f87155d27656805c05613fe31664fac6c9f9062
