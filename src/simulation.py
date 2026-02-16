@@ -5,14 +5,58 @@ from src.config import (
     FRICTION, DELTA_T, MAX_RADIUS
 )
 from src.interaction import Interaction
-from scipy.spatial import cKDTree
 from numba import njit
-# --- Build particle types from setting ---
+
+# --- HIGH-PERFORMANCE COMPUTATION LOGIC (Numba JIT) ---
+
+@njit
+def calculate_forces_jit(positions, types, matrix, max_dist):
+    """
+    Computes interaction forces using a double-loop.
+    Optimized via Numba for high-performance particle physics.
+    """
+    n = positions.shape[0]
+    dv = np.zeros_like(positions)
+    
+    # Radii for force zones (repulsion vs attraction)
+    r_rep = 0.15 * max_dist 
+    r_att = 0.60 * max_dist
+
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                continue
+            
+            dx = positions[j, 0] - positions[i, 0]
+            dy = positions[j, 1] - positions[i, 1]
+            dist = np.sqrt(dx*dx + dy*dy)
+
+            if 0 < dist < max_dist:
+                strength = matrix[int(types[i]), int(types[j])]
+                r_norm = dist / max_dist
+                
+                # Force calculation (Smoothstep-like behavior)
+                factor = 0.0
+                if r_norm < 0.15: # Repulsion
+                    t = r_norm / 0.15
+                    factor = -(1.0 - (t * t * (3 - 2 * t)))
+                elif r_norm < 0.60: # Attraction
+                    t = (r_norm - 0.15) / (0.60 - 0.15)
+                    factor = (1.0 - (t * t * (3 - 2 * t)))
+                
+                dv[i, 0] += (dx / dist) * strength * factor
+                dv[i, 1] += (dy / dist) * strength * factor
+                
+    return dv
+
 @njit
 def apply_physics_jit(velocities, dv, effect_scale, delta_t, friction):
+    """Updates velocities based on calculated forces and friction."""
     velocities += (dv * effect_scale) * delta_t
     velocities *= friction
     return velocities
+
+# --- Particle Initialization Functions ---
 
 def types_from_setting(setting) -> np.ndarray:
     """
@@ -28,8 +72,6 @@ def types_from_setting(setting) -> np.ndarray:
             )
         types.extend([t] * n)
     return np.array(types, dtype=int)
-
-# --- Particle Initialization Functions ---
 
 def init_positions(n_particles: int) -> np.ndarray:
     """Generate initial particle positions within simulation."""
@@ -47,7 +89,6 @@ def init_color_distribution(types: np.ndarray) -> np.ndarray:
     """Initialize colors based on particle types."""
     return np.c_[COLOR_DISTRIBUTION[types], np.ones(len(types))]
 
-
 def init_masses(n_particles: int, mass: float = 1.0) -> np.ndarray:
     """
     Assign a physical mass to each particle.
@@ -56,7 +97,6 @@ def init_masses(n_particles: int, mass: float = 1.0) -> np.ndarray:
         raise ValueError("mass must be greater than zero")
     return np.full(n_particles, mass, dtype=float)
 
-
 def init_bounciness(n_particles: int, bounciness: float = 0.9) -> np.ndarray:
     """
     Assign a bounciness coefficient to each particle.
@@ -64,7 +104,6 @@ def init_bounciness(n_particles: int, bounciness: float = 0.9) -> np.ndarray:
     if not 0.0 <= bounciness <= 1.0:
         raise ValueError("bounciness must be between 0 and 1")
     return np.full(n_particles, bounciness, dtype=float)
-
 
 # --- Simulation Class ---
 
@@ -75,8 +114,9 @@ class Simulation:
         mass: float = 1.0,
         bounciness: float = 0.9
     ):
+        """Initializes the simulation environment and particles."""
         if setting is None:
-            setting = [{"n": 3, "type": 2}, {"n": 4, "type": 0}]
+            setting = [{"n": 100, "type": i} for i in range(4)]
 
         # particle types and count
         self.types = types_from_setting(setting)
@@ -91,7 +131,7 @@ class Simulation:
 
         # interactions
         self.interaction = Interaction()
-        self.max_distance = float(MAX_RADIUS) #from config
+        self.max_distance = float(MAX_RADIUS)
         self.effect_scale = 1.0
 
         # packed view [x, y, vx, vy, type]
@@ -109,69 +149,18 @@ class Simulation:
         self.particles[:, 2:4] = self.velocities
         self.particles[:, 4] = self.types
 
-    def _wrap_positions(self):
-        span = (SPACE_MAX - SPACE_MIN)
-        self.positions = (self.positions - SPACE_MIN) % span + SPACE_MIN
-        
+
     def position_bounciness(self):
         """Bounce off boundaries, scaling rebound velocity by bounciness."""
         for dim in (0, 1):
             low, high = SPACE_MIN, SPACE_MAX
-
             # lower wall
             mask_low = self.positions[:, dim] < low
             if np.any(mask_low):
-                self.positions[mask_low, dim] = low + (
-                    low - self.positions[mask_low, dim]
-                )
+                self.positions[mask_low, dim] = low + (low - self.positions[mask_low, dim])
                 self.velocities[mask_low, dim] *= -self.bounciness[mask_low]
-
             # upper wall
             mask_high = self.positions[:, dim] > high
             if np.any(mask_high):
-                self.positions[mask_high, dim] = high - (
-                    self.positions[mask_high, dim] - high
-                )
+                self.positions[mask_high, dim] = high - (self.positions[mask_high, dim] - high)
                 self.velocities[mask_high, dim] *= -self.bounciness[mask_high]
-
-
-    def step(self):
-        dv = np.zeros_like(self.velocities)
-        
-        tree = cKDTree(self.positions)
-        pairs = tree.query_pairs(self.max_distance)
-
-        for i, j in pairs:
-            dv[i] += self.interaction.interaction_effect(
-                self.positions[i], self.positions[j],
-                int(self.types[i]), int(self.types[j]),
-                self.max_distance
-            )
-            dv[j] += self.interaction.interaction_effect(
-                self.positions[j], self.positions[i],
-                int(self.types[j]), int(self.types[i]),
-                self.max_distance
-            )
-
-        dv /= self.masses[:, None]
-
-        self.velocities += np.random.uniform(-0.01, 0.01, size=self.velocities.shape)
-
-        self.velocities = apply_physics_jit(
-            self.velocities, dv, self.effect_scale, 
-            float(DELTA_T), float(FRICTION)
-        )
-        
-        self.positions += self.velocities * float(DELTA_T)
-        
-        #self._wrap_positions()
-        self.position_bounciness()
-        self.update_particles_view()
-
-if __name__ == "__main__":
-    sim = Simulation(
-        [{"n": 103, "type": 2}, {"n": 14, "type": 0}]
-    )
-    print("n_particles:", sim.n_particles)
-    print("particles shape:", sim.particles.shape)
-    print(sim.particles[:5])
