@@ -18,9 +18,6 @@ def calculate_forces_jit(positions, types, matrix, max_dist):
     n = positions.shape[0]
     dv = np.zeros_like(positions)
     
-    # Radii for force zones (repulsion vs attraction)
-    r_rep = 0.15 * max_dist 
-    r_att = 0.60 * max_dist
 
     for i in range(n):
         for j in range(n):
