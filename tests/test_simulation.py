@@ -1,5 +1,4 @@
 import numpy as np
-import pytest
 from src.config import SPACE_MIN, SPACE_MAX, MAX_RADIUS
 from src.simulation import Simulation, calculate_forces_jit
 
