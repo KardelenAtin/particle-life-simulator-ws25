@@ -188,7 +188,7 @@ class Simulation:
         self.positions += self.velocities * float(DELTA_T)
         
         # 3. Boundary handling & view sync
-        self.position_bounciness()
+        self._wrap_positions()
         self.update_particles_view()
 
 if __name__ == "__main__":
