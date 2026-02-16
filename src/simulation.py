@@ -149,6 +149,10 @@ class Simulation:
         self.particles[:, 2:4] = self.velocities
         self.particles[:, 4] = self.types
 
+    def _wrap_positions(self):
+        """Applies periodic boundary conditions (wrap-around)."""
+        span = (SPACE_MAX - SPACE_MIN)
+        self.positions = (self.positions - SPACE_MIN) % span + SPACE_MIN
 
     def position_bounciness(self):
         """Bounce off boundaries, scaling rebound velocity by bounciness."""
@@ -164,3 +168,33 @@ class Simulation:
             if np.any(mask_high):
                 self.positions[mask_high, dim] = high - (self.positions[mask_high, dim] - high)
                 self.velocities[mask_high, dim] *= -self.bounciness[mask_high]
+
+    def step(self):
+        """Executes one simulation step."""
+        # 1. JIT Force Calculation
+        dv = calculate_forces_jit(
+            self.positions, 
+            self.types, 
+            self.interaction.matrix, 
+            self.max_distance
+        )
+
+        dv /= self.masses[:, None]
+
+        # 2. Physics Update
+        self.velocities += np.random.uniform(-0.01, 0.01, size=self.velocities.shape)
+        self.velocities = apply_physics_jit(
+            self.velocities, dv, self.effect_scale, 
+            float(DELTA_T), float(FRICTION)
+        )
+        
+        self.positions += self.velocities * float(DELTA_T)
+        
+        # 3. Boundary handling & view sync
+        self.position_bounciness()
+        self.update_particles_view()
+
+if __name__ == "__main__":
+    sim = Simulation([{"n": 100, "type": 0}])
+    sim.step()
+    print("n_particles:", sim.n_particles)           
