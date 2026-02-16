@@ -4,10 +4,10 @@ class Interaction:
     def __init__(self, matrix: np.ndarray | None = None):
         if matrix is None:
             matrix = np.array([
-                [ 0.5, -0.4, -0.2,  0.1],  # Rot
-                [-0.4,  0.5,  0.1, -0.2],  # Grün
-                [-0.2,  0.1,  0.5, -0.4],  # Blau
-                [ 0.1, -0.2, -0.4,  0.5],  # Gelb
+                [ 0.2, 0.5, -0.4,  0.0],  
+                [-0.2,  0.2,  0.5, -0.4],  
+                [-0.4,  -0.2,  0.2, 0.5],  
+                [ 0.5, -0.4, -0.2,  0.2],  
             ], dtype=float)
         self.matrix = matrix.astype(float)
 
@@ -43,10 +43,10 @@ class Interaction:
 
         if r < repulsion_radius:
             t = r / repulsion_radius
-            factor = -(1.0 - smoothstep(t))   # -1 -> 0 weich
+            factor = -(1.0 - smoothstep(t))   
         elif r < attraction_radius:
             t = (r - repulsion_radius) / (attraction_radius - repulsion_radius)
-            factor = smoothstep(1.0 - t)      # 1 -> 0 weich
+            factor = smoothstep(1.0 - t)     
         else:
             factor = 0.0
 
