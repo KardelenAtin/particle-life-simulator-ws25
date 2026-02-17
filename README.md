@@ -107,7 +107,7 @@ We maintain code reliability using the following tools:
 
 ---
 
-### Physics Model
+## Physics Model
 The engine utilizes a *Smoothstep force function* implemented within the JIT kernels:
 
 * **Repulsion Zone**: At a proximity of <15% of the MAX_RADIUS, particles experience strong repulsion to prevent overlapping.
