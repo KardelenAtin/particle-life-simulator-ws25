@@ -25,7 +25,9 @@ def run_benchmark():
     start_t = time.time()
     profiler.enable()
 
-    for _ in range(steps):
+    for i in range(steps):
+        if i % 10 == 0:
+            print(f"Step {i}/{steps}")
         sim.step()
 
     profiler.disable()
