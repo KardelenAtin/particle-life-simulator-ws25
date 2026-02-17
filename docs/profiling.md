@@ -12,7 +12,9 @@ We conducted several benchmarks to compare the execution speed with and without 
 | **Optimized** (Numba JIT) | 2,000 | 200 | 3.28s | **61.50 FPS** |
 | **Optimized** (Stress Test) | 4,000 | 200 | 13.08s | 15.29 FPS |
 
-The transition from Pure Python to Numba JIT resulted in a performance boost of approx. 40% (from 0.17 FPS to ~68 FPS). This optimization allows the simulator to handle thousands of particles in real-time, meeting the project's scalability requirements.
+The transition from Pure Python to Numba JIT resulted in a performance boost of approx. 400x speedup (from 0.17 FPS to ~68 FPS). This optimization allows the simulator to handle thousands of particles in real-time.
+
+![Numba Performance 4000 Particles](images/profiling_numba_4000.png)
 
 ## Benchmark Environment
 The tests were conducted on the following hardware to ensure reproducibility:
@@ -26,6 +28,8 @@ The tests were conducted on the following hardware to ensure reproducibility:
 
 # Bottleneck Analysis (cProfile)
 Using cProfile, we identified that the calculate_forces_jit function was the primary bottleneck due to its O(n2) complexity.
+
+![Bottleneck without JIT](images/profiling_no_numba.png)
 
 The following table shows the top functions ordered by their cumulative execution time during a run of 200 steps with 2,000 particles (Optimized with Numba).
 
@@ -48,6 +52,8 @@ During the development phase, we also evaluated the use of a **cKDTree** to opti
 * **Observation:** While the cKDTree significantly reduced the number of distance calculations, the overhead of rebuilding the tree structure in every single simulation step was substantial for our particle counts.
 * **Performance Comparison:** At our target range of 2,000 particles the **Numba-optimized $O(n^2)$ approach** actually outperformed the cKDTree.
 * **Conclusion:** We decided to stick with the Numba JIT implementation as it provided the most stable and highest Frame Rate (FPS) for the required particle density.
+
+![Snakeviz JIT Optimization](images/profiling_numba.png)
 
 # Visualizing with Snakeviz
 To reproduce the visual analysis:
