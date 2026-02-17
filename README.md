@@ -4,6 +4,8 @@
 ![Numba](https://img.shields.io/badge/Acceleration-Numba-orange)
 ![NumPy](https://img.shields.io/badge/Backend-NumPy-green)
 
+##  Project Description
+
 This project is a high-performance simulation of "Particle Life." It was created for the "Data Science and AI Infrastructure" module to show how life-like, complex patterns can emerge from very simple rules. By just telling different types of particles to either attract or repel each other, they begin to form structures that look like cells, swarms, or even tiny organisms.
 
 ---
@@ -54,6 +56,8 @@ Launch the interactive simulation via the main entry point:
    python main.py
    ```
 
+---
+
 ### Controls
 | Key | Action | Description |
 | :--- | :--- | :--- |
@@ -65,7 +69,7 @@ Launch the interactive simulation via the main entry point:
 
 ## Developer Guide
 
-### Performance & Benchmarking
+### 1.Performance & Benchmarking
 The core physics loop is compiled into machine code using *Numba (Just-In-Time compilation)*. This is crucial for handling the  complexity of particle-to-particle interactions:
 
 | Version | Performance |
@@ -79,10 +83,11 @@ To perform a runtime analysis:
    python Profiling.py
    snakeviz simulation.profile
    ```
+
 For a more detailed performance breakdown including SnakeViz visualizations and kernel-level analysis, see:
 [Profiling Report](docs/profiling.md)
 
-### Continuous Integration (CI)
+### 2.Continuous Integration (CI)
 All quality checks are automatically executed via our CI pipeline.
 Each push and pull request triggers:
 
@@ -93,12 +98,14 @@ Each push and pull request triggers:
 
 This ensures early detection of regressions and guarantees consistent code quality across environments.
 
-### Quality Assurance
+### 3.Quality Assurance
 We maintain code reliability using the following tools:
 
 - **Testing:** pytest  
 - **Coverage:** pytest --cov=src  
 - **Linting:** ruff check 
+
+---
 
 ### Physics Model
 The engine utilizes a *Smoothstep force function* implemented within the JIT kernels:
@@ -110,7 +117,7 @@ The engine utilizes a *Smoothstep force function* implemented within the JIT ker
 ---
 
 ##  Project Team
-* *Kardelen Atin*
-* *Meriem Nora Bouazza*
-* *Melina Tsigka*
-* *Vipusiny Vijayakumar*
+* *Kardelen Atin* -Backend
+* *Meriem Nora Bouazza* -Bacckend
+* *Vipusiny Vijayakumar* -Backend
+* *Melina Tsigka* - Frontend
