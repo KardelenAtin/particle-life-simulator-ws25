@@ -40,7 +40,7 @@ The repository is organized to separate core logic, documentation, and quality a
 ### Installation
 1.  **Clone the repository**:
     ```bash
-    git clone (https://github.com/KardelenAtin/particle-life-simulator-ws25.git)
+    git clone https://github.com/KardelenAtin/particle-life-simulator-ws25.git
     cd particle-life-simulator-ws25
     ```
 2.  **Install dependencies**:
