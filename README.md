@@ -118,6 +118,6 @@ The engine utilizes a *Smoothstep force function* implemented within the JIT ker
 
 ##  Project Team
 * *Kardelen Atin* -Backend
-* *Meriem Nora Bouazza* -Bacckend
+* *Meriem Nora Bouazza* -Backend
 * *Vipusiny Vijayakumar* -Backend
 * *Melina Tsigka* - Frontend
