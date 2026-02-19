@@ -14,7 +14,7 @@ def main():
 
     # GUI window
     canvas = scene.SceneCanvas(keys="interactive", show=True)
-    canvas.size = 800, 600
+    canvas.size = 1000, 800
     canvas.title = "Particles"
 
     view = canvas.central_widget.add_view()
@@ -35,19 +35,15 @@ def main():
     )
     view.add(scatter)
 
-    frame_counter = 0
-    
+    STEPS_PER_FRAME = 2
     def update(_):
-        nonlocal frame_counter
-        frame_counter += 1
-
-        if frame_counter % 2 == 0:
+        for _ in range(STEPS_PER_FRAME):
             sim.step()
         
         scatter.set_data(
             sim.positions.astype(np.float32),
             face_color=sim.colors.astype(np.float32),
-            size=4
+            size=6
         )
         canvas.update()
 
