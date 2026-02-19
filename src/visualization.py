@@ -41,7 +41,7 @@ def main():
     )
     view.add(scatter)
 
-    STEPS_PER_FRAME = 2
+    STEPS_PER_FRAME = 1
     def update(_):
         """
         Called by the timer roughly 60 times per second.
