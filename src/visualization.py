@@ -5,6 +5,12 @@ from src.config import SPACE_MIN, SPACE_MAX
 
 
 def main():
+    """
+    Launches the particle life visualization.
+
+    Creates the simulation, sets up the VisPy window,
+    and continuously renders and updates the particles.
+    """
     sim = Simulation([
         {"n":500, "type": 0}, 
         {"n":500, "type": 1}, 
@@ -35,8 +41,14 @@ def main():
     )
     view.add(scatter)
 
-    STEPS_PER_FRAME = 2
+    STEPS_PER_FRAME = 1
     def update(_):
+        """
+        Called by the timer roughly 60 times per second.
+
+        Advances the simulation by several steps and then
+        updates the particle visualization.
+        """
         for _ in range(STEPS_PER_FRAME):
             sim.step()
         
@@ -52,7 +64,14 @@ def main():
     @canvas.events.key_press.connect
 
     def on_key_press(event):
-        """Handle keyboard inputs for interaction."""
+        """
+        Handles keyboard interaction.
+
+        r -> reset all particle positions randomly
+        m -> generate a new random interaction matrix
+        p -> pause or resume the simulation
+        """
+
         if event.text.lower() == 'r':
             sim.positions = np.random.uniform(SPACE_MIN, SPACE_MAX, size=(sim.n_particles, 2))
         
