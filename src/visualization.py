@@ -55,14 +55,15 @@ def main():
         scatter.set_data(
             sim.positions.astype(np.float32),
             face_color=sim.colors.astype(np.float32),
-            size=6
+            size=4
         )
         canvas.update()
 
+    #warm-up
+    sim.step()
     timer = app.Timer(interval=1/60, connect=update, start=True)
 
     @canvas.events.key_press.connect
-
     def on_key_press(event):
         """
         Handles keyboard interaction.
