@@ -31,7 +31,12 @@ The repository is organized to separate core logic, documentation, and quality a
 * `docs/`: Detailed performance reports and hardware benchmarks.
 * `Profiling.py`: Main utility script for runtime analysis and bottleneck identification.
 
----
+--- 
+
+## Architecture Diagram
+![Architecture Diagram](docs/images/Particle_Project.drawio.png)
+
+--- 
 
 ##  User Guide
 

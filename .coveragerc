@@ -1,4 +1,0 @@
-[run]
-omit =
-    src/visualization.py
-    src/Profiling.py
