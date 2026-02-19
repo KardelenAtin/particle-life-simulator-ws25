@@ -1,0 +1,4 @@
+[run]
+omit =
+    src/visualization.py
+    src/main.py
